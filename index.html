@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mt-4 mb-4">Weather App</h1>
+    
+    <div class="form-group">
+      <label for="cityInput">Enter city names (comma-separated):</label>
+      <input type="text" class="form-control" id="cityInput">
+    </div>
+    
+    <button class="btn btn-primary" onclick="getWeather()">Get Weather</button>
+    
+    <div class="mt-4">
+      <h4>Weather Results:</h4>
+      <pre id="weatherResult"></pre>
+    </div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const citiesInput = document.getElementById('cityInput').value;
+      const cities = citiesInput.split(',').map(city => city.trim());
+
+      const response = await fetch('http://localhost:3000/getWeather', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cities }),
+      });
+
+      const data = await response.json();
+      const resultDiv = document.getElementById('weatherResult');
+
+      if (response.ok) {
+        resultDiv.innerText = JSON.stringify(data, null, 2);
+      } else {
+        resultDiv.innerText = `Error: ${data.error}`;
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
